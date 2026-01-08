@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        var arr=[
+            "https://i.pinimg.com/736x/3a/ed/42/3aed42114f4930604464748672d647dc.jpg",
+            "https://i.pinimg.com/1200x/6b/56/94/6b56942f37618f2f2ba54f6f8504e475.jpg",
+           
+        ]
+        i=0;
+
+        var image=document.createElement("img")
+        image.src=arr[i]
+        
+
+
+        document.querySelector("body").append(image)
+
+        setInterval(()=>{
+            i++;
+            if (i==arr.length) {
+                i=0
+            }
+            image.src=arr[i]
+        },1000)
+    </script>
+</body>
+</html>
