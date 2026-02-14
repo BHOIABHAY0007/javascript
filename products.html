@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>BAZ-CART</title>
+
+  <style>
+    body{
+      font-family: Arial;
+      padding:20px;
+      background:linear-gradient(to right,#667eea,#764ba2);
+     
+    }
+
+    .controls{
+      text-align:center;
+      margin-bottom:20px;
+    }
+
+    input,select{
+      padding:10px;
+      margin:5px;
+      border:none;
+      border-radius:20px;
+      outline:none;
+    }
+
+    #container{
+      display:flex;
+      gap: 20px;
+     
+    }
+
+    .card{
+      background:#fff;
+      padding:15px;
+      text-align:center;
+      border-radius:15px;
+      box-shadow:0 10px 25px rgba(0,0,0,0.2);
+     
+     
+    }
+
+  
+    img{
+      width:100%;
+      height:140px;
+      object-fit:cover;
+      border-radius:10px;
+    }
+
+    h3{
+      margin:10px 0 5px;
+    }
+
+    p{
+      font-weight:bold;
+      color:#444;
+    }
+
+    button{
+      padding:6px 14px;
+      border:none;
+      border-radius:20px;
+      cursor:pointer;
+      margin:5px;
+      color:white;
+    }
+
+    .edit{
+      background:#28a745;
+    }
+
+    .delete{
+      background:#dc3545;
+    }
+
+  </style>
+</head>
+
+<body>
+
+  <div class="controls">
+    <input type="text" id="search" placeholder="🔍 Search product">
+    <select id="sort">
+      <option value="">Sort by</option>
+      <option value="low">Price Low → High</option>
+      <option value="high">Price High → Low</option>
+      <option value="az">Name A → Z</option>
+      <option value="za">Name Z → A</option>
+    </select>
+  </div>
+
+  <div id="container"></div>
+
+<script>
+let products = JSON.parse(localStorage.getItem("products")) || [];
+let container = document.getElementById("container");
+
+function displayProducts(data){
+  container.innerHTML = "";
+
+  data.forEach((el,i)=>{
+    let div = document.createElement("div");
+    div.className = "card";
+
+    let name = document.createElement("h3");
+    name.innerText = el.title;
+
+    let img = document.createElement("img");
+    img.src = el.image || "https://via.placeholder.com/200";
+
+    let price = document.createElement("p");
+    price.innerText = "₹ " + el.price;
+
+    let editBtn = document.createElement("button");
+    editBtn.innerText = "Edit";
+    editBtn.className = "edit";
+    editBtn.onclick = () => editProduct(i);
+
+    let delBtn = document.createElement("button");
+    delBtn.innerText = "Delete";
+    delBtn.className = "delete";
+    delBtn.onclick = () => deleteProduct(i);
+
+    div.append(img,name,price,editBtn,delBtn);
+    container.append(div);
+  });
+}
+
+function editProduct(index){
+  let newName = prompt("Enter product name", products[index].title);
+  let newPrice = prompt("Enter price", products[index].price);
+
+  if(newName && newPrice){
+    products[index].title = newName;
+    products[index].price = Number(newPrice);
+    localStorage.setItem("products", JSON.stringify(products));
+    displayProducts(products);
+  }
+}
+
+function deleteProduct(index){
+  products.splice(index,1);
+  localStorage.setItem("products", JSON.stringify(products));
+  displayProducts(products);
+}
+
+search.oninput = ()=>{
+  let value = search.value.toLowerCase();
+  displayProducts(products.filter(p=>p.title.toLowerCase().includes(value)));
+};
+
+sort.onchange = ()=>{
+  let sorted = [...products];
+
+  if(sort.value=="low") sorted.sort((a,b)=>a.price-b.price);
+  if(sort.value=="high") sorted.sort((a,b)=>b.price-a.price);
+  if(sort.value=="az") sorted.sort((a,b)=>a.title.localeCompare(b.title));
+  if(sort.value=="za") sorted.sort((a,b)=>b.title.localeCompare(a.title));
+
+  displayProducts(sorted);
+};
+
+displayProducts(products);
+</script>
+
+</body>
+</html>
