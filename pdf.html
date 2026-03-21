@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Premium Bill Generator</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+<style>
+body{
+  margin:0;
+  font-family:'Poppins',sans-serif;
+  background:linear-gradient(135deg,#141e30,#243b55);
+}
+
+.container{
+  display:flex;
+  gap:20px;
+  padding:20px;
+}
+
+.form{
+  width:30%;
+  background:#fff;
+  padding:20px;
+  border-radius:15px;
+}
+
+.preview{
+  width:70%;
+  background:#fff;
+  padding:40px;
+  border-radius:15px;
+  position:relative;
+}
+
+/* HEADER */
+.header{
+  display:flex;
+  align-items:center;
+  background:linear-gradient(45deg,#000,#444);
+  color:#fff;
+  padding:15px;
+  border-radius:10px;
+}
+
+.logo{width:70px;}
+
+.title{
+  flex:1;
+  text-align:center;
+}
+
+.title h2{margin:0;}
+.small{font-size:12px;}
+
+.right{text-align:right;}
+
+/* TERMS */
+.terms{
+  background:#f9f9f9;
+  padding:20px;
+  border-radius:10px;
+  border-left:5px solid #000;
+}
+
+/* FOOTER ADDRESS */
+.address-footer{
+  margin-top:40px;
+  border-top:1px solid #ccc;
+  padding-top:10px;
+  text-align:center;
+  font-size:12px;
+  color:#555;
+}
+
+input,textarea{
+  width:100%;
+  margin-bottom:10px;
+  padding:10px;
+  border-radius:8px;
+  border:1px solid #ccc;
+}
+
+button{
+  width:100%;
+  padding:12px;
+  margin-top:10px;
+  border:none;
+  border-radius:10px;
+  background:#000;
+  color:#fff;
+  cursor:pointer;
+}
+
+.highlight{
+  background:#f4f4f4;
+  padding:12px;
+  border-radius:8px;
+  margin-top:15px;
+}
+
+.signature{
+  width:150px;
+  height:60px;
+  border-bottom:1px solid #000;
+}
+
+.page{page-break-after:always;}
+
+p{
+  line-height:1.6;
+}
+
+/* 📱 MOBILE RESPONSIVE */
+/* 📱 MOBILE PRO RESPONSIVE */
+@media (max-width: 768px){
+
+  body{
+    background:#f2f4f7;
+  }
+
+  .container{
+    flex-direction:column;
+    padding:10px;
+  }
+
+  .form{
+    width:100%;
+    padding:15px;
+    border-radius:12px;
+  }
+
+  .preview{
+    width:100%;
+    padding:20px;
+    margin-top:10px;
+    border-radius:12px;
+  }
+
+  /* HEADER */
+  .header{
+    flex-direction:column;
+    text-align:center;
+    padding:12px;
+  }
+
+  .logo{
+    width:60px;
+    margin-bottom:8px;
+  }
+
+  .title h2{
+    font-size:18px;
+  }
+
+  .small{
+    font-size:11px;
+  }
+
+  /* TEXT */
+  p, li{
+    font-size:14px;
+  }
+
+  h4{
+    font-size:15px;
+  }
+
+  /* INPUT */
+  input, textarea{
+    font-size:14px;
+    padding:10px;
+  }
+
+  /* BUTTON */
+  button{
+    font-size:15px;
+    padding:12px;
+    border-radius:8px;
+  }
+
+  /* STICKY BUTTONS (APP FEEL) */
+  .form button:last-child{
+    position:sticky;
+    bottom:10px;
+  }
+
+  /* SIGN */
+  .signature{
+    width:110px;
+    height:45px;
+  }
+
+  /* TERMS */
+  .terms{
+    font-size:14px;
+    padding:15px;
+  }
+
+  /* FOOTER */
+  .address-footer{
+    font-size:11px;
+    margin-top:30px;
+  }
+
+}
+
+/* 📱 SMALL MOBILE */
+@media (max-width: 480px){
+
+  .title h2{
+    font-size:16px;
+  }
+
+  .preview{
+    padding:15px;
+  }
+
+  .form{
+    padding:12px;
+  }
+
+  p, li{
+    font-size:13px;
+  }
+
+}
+html{
+  scroll-behavior:smooth;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="form">
+<h3>Enter Details</h3>
+
+<input id="client" placeholder="Client Name">
+<textarea id="subject" placeholder="Project Subject"></textarea>
+<textarea name="" id=""></textarea>
+<input id="rooms" type="number" placeholder="Rooms">
+<input id="price" type="number" placeholder="Price per Room">
+<input id="date" type="date">
+
+<label>Client Signature</label>
+<input type="file" id="clientSignInput">
+
+<label>Architect Signature</label>
+<input type="file" id="authSignInput">
+
+<button onclick="generate()">Generate Bill</button>
+<button onclick="downloadPDF()">Download PDF</button>
+<button onclick="shareWhatsApp()">WhatsApp Share</button>
+</div>
+
+<div id="bill">
+
+<!-- PAGE 1 -->
+<div class="preview page">
+
+<div class="header">
+<img src="https://cdn-icons-png.flaticon.com/512/1995/1995470.png" class="logo">
+<div class="title">
+<h2>THE MADHAV ARCHITECT</h2>
+<p class="small">Architecture Consultant • Architecture Planning • Interior Designer</p>
+<p class="small">📞 +91 7984744270 | 📧 themadhavarchitect@gmail.com</p>
+</div>
+</div>
+
+<p><b>Invoice No:</b> <span id="invoiceNo"></span></p>
+<p class="right"><b>Date:</b> <span id="p_date"></span></p>
+
+<p>To,</p>
+<p><b id="p_client"></b></p>
+
+<p class="highlight"><b>Subject:</b> <span id="p_subject"></span></p>
+<p>
+<b>Respected Sir,</b><br><br>
+Based on the detailed review of the current site layout and our initial concept meeting, 
+the following is our proposal for overseeing the project, architectural consulting services 
+to be performed by the <b>madhav architect </b> defined within the scope of work & scope of services.
+</p>
+<h4>Scope Of Services:</h4>
+<ol>
+<li>Furniture Layout Drawing</li>
+<li>3D Elevation Designing</li>
+<li>Electrical Drawing</li>
+<li>P.O.P Design</li>
+<li>Furniture Working Drawing</li>
+<li>Material Selection</li>
+<li>Site Coordination</li>
+</ol>
+
+<div class="highlight">
+<p>Our Fees Will Be Lumsum <b><span id="p_price"></span>/- Rs</b> PER Room only.</p>
+<p><b>TOTAL FEES <span id="p_price"></span> X <span id="p_rooms"></span> ROOM = <span id="p_total"></span>/-</b></p>
+<p><i id="p_words"></i></p>
+</div>
+
+<br><br>
+
+<div style="display:flex; justify-content:space-between;">
+<div>
+<p>Client Signature</p>
+<img id="clientSign" class="signature">
+</div>
+<div>
+<p>Architect Signature</p>
+<img id="authSign" class="signature">
+</div>
+</div>
+
+</div>
+
+<!-- PAGE 2 -->
+<div class="preview page">
+
+<h3>Terms & Conditions</h3>
+
+<div class="terms">
+<p>1) 50% Advance Of Total Fees.</p>
+<p>2) GST As Applicable Will Be Considered As Extra.</p>
+<p>3) Extra Charges If Any Of The Local Authority Will Be Beard By The Owner.</p>
+<p>4) The Charge For Visiting A Place More Than 10 Km Will Be An Additional 10rs/Km In Both Directions. (Arrived & Returns).</p>
+</div>
+
+<!-- ADDRESS AT LAST -->
+<div class="address-footer">
+<b>THE MADHAV ARCHITECT</b><br>
+📍 26, D-Block, City Centre, Near Mazum Bridge, Modasa <br>
+<!-- 📞 +91 7984744270 | 📧 themadhavarchitect@gmail.com -->
+
+<br>
+<span style="font-size:11px; color:#777;">
+© THE MADHAV ARCHITECT | All Rights Reserved
+</span>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+function generateInvoice(){
+  let num = Math.floor(Math.random()*100000);
+  document.getElementById("invoiceNo").innerText = "INV-" + num;
+}
+
+function generate(){
+  generateInvoice();
+
+  let client=document.getElementById('client').value;
+  let subject=document.getElementById('subject').value;
+  let rooms=document.getElementById('rooms').value;
+  let price=document.getElementById('price').value;
+  let date=document.getElementById('date').value;
+
+  let total=rooms*price;
+
+  document.getElementById('p_client').innerText=client;
+  document.getElementById('p_subject').innerText=subject;
+  document.getElementById('p_price').innerText=Number(price).toLocaleString('en-IN');
+  document.getElementById('p_rooms').innerText=rooms;
+  document.getElementById('p_total').innerText=Number(total).toLocaleString('en-IN');
+  document.getElementById('p_date').innerText=date;
+
+  document.getElementById('p_words').innerText = numberToWords(total) + " Only.";
+}
+
+function numberToWords(num){
+  const a=["","One","Two","Three","Four","Five","Six","Seven","Eight","Nine","Ten","Eleven","Twelve","Thirteen","Fourteen","Fifteen","Sixteen","Seventeen","Eighteen","Nineteen"];
+  const b=["","","Twenty","Thirty","Forty","Fifty","Sixty","Seventy","Eighty","Ninety"];
+
+  function inWords(n){
+    if(n<20) return a[n];
+    if(n<100) return b[Math.floor(n/10)]+" "+a[n%10];
+    if(n<1000) return a[Math.floor(n/100)]+" Hundred "+inWords(n%100);
+    if(n<100000) return inWords(Math.floor(n/1000))+" Thousand "+inWords(n%1000);
+    if(n<10000000) return inWords(Math.floor(n/100000))+" Lakh "+inWords(n%100000);
+    return "";
+  }
+  return inWords(num);
+}
+
+clientSignInput.onchange=e=>clientSign.src=URL.createObjectURL(e.target.files[0]);
+authSignInput.onchange=e=>authSign.src=URL.createObjectURL(e.target.files[0]);
+
+function downloadPDF(){
+  html2pdf().from(document.getElementById('bill')).save();
+}
+
+function shareWhatsApp(){
+  let msg=`Invoice ${invoiceNo.innerText}
+Client: ${p_client.innerText}
+Total: ₹${p_total.innerText}`;
+  window.open("https://wa.me/?text="+encodeURIComponent(msg));
+}
+
+</script>
+
+</body>
+</html>
